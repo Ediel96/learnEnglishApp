@@ -8,7 +8,7 @@ export abstract class ITaskUC {
 
   abstract saveTask(createTask: CreateTaskDto): Promise<any>;
 
-  abstract updateTask(updateTask: UpdateTaskDto): Promise<any>;
+  abstract updateTask(id: string, updateTask: UpdateTaskDto): Promise<any>;
 
   abstract deleteTask(id: string): Promise<any>;
 

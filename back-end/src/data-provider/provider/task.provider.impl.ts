@@ -27,7 +27,7 @@ export class TaskProvider implements ITaskProvider {
   }
 
   async findById(id: string): Promise<TaskModel> {
-    return this._taskModel.findById(id);
+    return this._taskModel.findOne({ _id: id });
   }
 
   async deleteById(id: string): Promise<TaskModel> {

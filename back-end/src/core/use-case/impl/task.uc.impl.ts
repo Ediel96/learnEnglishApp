@@ -17,11 +17,10 @@ export class TaskUCImpl implements ITaskUC {
     return await this._taskProvider.create(createTask);
   }
 
-  async updateTask(updateTask: UpdateTaskDto): Promise<any> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async updateTask(id: string, updateTask: UpdateTaskDto): Promise<any> {
     const nowTask: Task = await this.findById(updateTask.userId);
     updateTask.words = nowTask.words;
-    return await this._taskProvider.update(updateTask._id, updateTask);
+    return await this._taskProvider.update(id, updateTask);
   }
 
   async deleteTask(id: string): Promise<any> {
@@ -29,6 +28,11 @@ export class TaskUCImpl implements ITaskUC {
   }
 
   async findById(id: string): Promise<any> {
-    return await this._taskProvider.findById(id);
+    try {
+      console.log('id', id);
+      return await this._taskProvider.findById(id);
+    } catch (error) {
+      return error;
+    }
   }
 }

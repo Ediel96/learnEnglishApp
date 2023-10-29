@@ -10,9 +10,6 @@ import { WordModel } from './word.model';
 @Schema()
 export class TaskModel extends Document {
   @Prop()
-  _id?: string;
-
-  @Prop()
   userId: string;
 
   @Prop()

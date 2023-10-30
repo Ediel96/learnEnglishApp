@@ -19,7 +19,15 @@ export class TaskUCImpl implements ITaskUC {
 
   async updateTask(id: string, updateTask: UpdateTaskDto): Promise<any> {
     const nowTask: Task = await this.findById(updateTask.userId);
-    updateTask.words = nowTask.words;
+
+    if (!nowTask) {
+      return {
+        sucess: false,
+        message: 'Task not found',
+        data: null,
+      };
+    }
+
     return await this._taskProvider.update(id, updateTask);
   }
 
@@ -30,7 +38,22 @@ export class TaskUCImpl implements ITaskUC {
   async findById(id: string): Promise<any> {
     try {
       console.log('id', id);
-      return await this._taskProvider.findById(id);
+
+      const task = await this._taskProvider.findById(id);
+
+      if (!task) {
+        return {
+          sucess: false,
+          message: 'Task not found',
+          data: null,
+        };
+      }
+
+      return {
+        sucess: true,
+        message: 'Task found',
+        data: task,
+      };
     } catch (error) {
       return error;
     }

@@ -4,8 +4,10 @@
  */
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, HydratedDocument } from 'mongoose';
 import { WordModel } from './word.model';
+
+export type TaskDocument = HydratedDocument<TaskModel>;
 
 @Schema()
 export class TaskModel extends Document {

@@ -4,10 +4,14 @@ import { ITaskProvider } from 'src/data-provider/task.provider';
 import { CreateTaskDto } from 'src/controller/dto/task/create-task.dto';
 import { UpdateTaskDto } from 'src/controller/dto/task/update-task.dto';
 import { Task } from 'src/core/entity/task';
+import { IWordList } from 'src/core/shared/logic/wordList';
 
 @Injectable()
 export class TaskUCImpl implements ITaskUC {
-  constructor(private readonly _taskProvider: ITaskProvider) {}
+  constructor(
+    private readonly _taskProvider: ITaskProvider,
+    private readonly _wordList: IWordList,
+  ) {}
 
   getTask(): Promise<any> {
     return this._taskProvider.getTask();
@@ -19,6 +23,10 @@ export class TaskUCImpl implements ITaskUC {
 
   async updateTask(id: string, updateTask: UpdateTaskDto): Promise<any> {
     const nowTask: Task = await this.findById(updateTask.userId);
+
+    const wordList = this._wordList.extractWordsFromTexts([updateTask.content]);
+
+    console.log(wordList);
 
     if (!nowTask) {
       return {

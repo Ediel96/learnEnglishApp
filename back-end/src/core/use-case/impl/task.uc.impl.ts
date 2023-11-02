@@ -5,12 +5,14 @@ import { CreateTaskDto } from 'src/controller/dto/task/create-task.dto';
 import { UpdateTaskDto } from 'src/controller/dto/task/update-task.dto';
 import { Task } from 'src/core/entity/task';
 import { IWordList } from 'src/core/shared/logic/wordList';
+import { IGetResponseService } from 'src/core/shared/http/getResponse.service';
 
 @Injectable()
 export class TaskUCImpl implements ITaskUC {
   constructor(
     private readonly _taskProvider: ITaskProvider,
     private readonly _wordList: IWordList,
+    private readonly getResponse: IGetResponseService,
   ) {}
 
   getTask(): Promise<any> {
@@ -26,7 +28,15 @@ export class TaskUCImpl implements ITaskUC {
 
     const wordList = this._wordList.extractWordsFromTexts([updateTask.content]);
 
-    console.log(wordList);
+    const wordListT: string[] = [];
+
+    for (const word of wordList) {
+      const wordT = this.getResponse
+        .translateToEnglish(word, 'en', 'es')
+        .then((val) => console.log(val));
+      console.log('wordT', wordT);
+      wordListT.push();
+    }
 
     if (!nowTask) {
       return {

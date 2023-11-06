@@ -6,7 +6,7 @@ import { CreateTaskDto } from 'src/controller/dto/task/create-task.dto';
 @Injectable()
 export abstract class ITaskProvider {
   /**
-   * Consulta task
+   * Consultar task
    */
   abstract getTask(): Promise<TaskModel[]>;
 

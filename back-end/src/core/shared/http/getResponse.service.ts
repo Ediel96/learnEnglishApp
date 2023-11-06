@@ -1,16 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { ResponseTranslate } from '../entity/wordTranslate.entity';
 
 @Injectable()
 export abstract class IGetResponseService {
-  abstract getWordTraslete(
+  abstract getWordTranslate(
     word: string,
-    lengNow: string,
-    lengAfter: string,
+    wordNow?: string,
+    wordAfter?: string,
   ): Promise<any>;
 
-  abstract translateToEnglish(
-    word: string,
-    lengNow: string,
-    lengAfter: string,
-  ): Promise<any>;
+  abstract translateToEnglish(word: string): Promise<ResponseTranslate>;
 }

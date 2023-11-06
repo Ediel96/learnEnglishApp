@@ -6,13 +6,14 @@ import { UpdateTaskDto } from 'src/controller/dto/task/update-task.dto';
 import { Task } from 'src/core/entity/task';
 import { IWordList } from 'src/core/shared/logic/wordList';
 import { IGetResponseService } from 'src/core/shared/http/getResponse.service';
+import { ITranslateProvider } from 'src/data-provider/translate.provider';
 
 @Injectable()
 export class TaskUCImpl implements ITaskUC {
   constructor(
     private readonly _taskProvider: ITaskProvider,
     private readonly _wordList: IWordList,
-    private readonly getResponse: IGetResponseService,
+    private readonly _translateProvider: ITranslateProvider,
   ) {}
 
   getTask(): Promise<any> {
@@ -24,25 +25,34 @@ export class TaskUCImpl implements ITaskUC {
   }
 
   async updateTask(id: string, updateTask: UpdateTaskDto): Promise<any> {
+    //consultar tarea
     const nowTask: Task = await this.findById(updateTask.userId);
-
+    //extraer palabras de la tarea
     const wordList = this._wordList.extractWordsFromTexts([updateTask.content]);
+    //traducir palabras a ingles
 
-    const wordListT: string[] = [];
+    // const translateWords: ResponseTranslate[] = [];
 
     for (const word of wordList) {
-      const wordT = this.getResponse
-        .translateToEnglish(word, 'en', 'es')
-        .then((val) => console.log(val));
-      console.log('wordT', wordT);
-      wordListT.push();
+      const wordT = await this._translateProvider.getTranslateBydWord(word);
+      if (wordT !== null) {
+      } else {
+      }
+
+      // translateWords.push(wordT);
     }
+
+    const response = await this._wordList.translateWordsToEnglish(wordList);
+
+    console.log('response', response);
+
+    return response;
 
     if (!nowTask) {
       return {
-        sucess: false,
+        success: false,
         message: 'Task not found',
-        data: null,
+        data: response,
       };
     }
 
@@ -55,20 +65,18 @@ export class TaskUCImpl implements ITaskUC {
 
   async findById(id: string): Promise<any> {
     try {
-      console.log('id', id);
-
       const task = await this._taskProvider.findById(id);
 
       if (!task) {
         return {
-          sucess: false,
+          success: false,
           message: 'Task not found',
           data: null,
         };
       }
 
       return {
-        sucess: true,
+        success: true,
         message: 'Task found',
         data: task,
       };

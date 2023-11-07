@@ -39,5 +39,5 @@ export class Word {
 
   @IsString()
   @IsNotEmpty()
-  wordT: string;
+  wordT: string[];
 }

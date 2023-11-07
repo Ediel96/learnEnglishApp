@@ -6,10 +6,10 @@ export interface Task {
   urlGif?: string;
   language?: string;
   content?: string;
-  words?: Word[];
+  words?: Words[];
 }
 
-export interface Word {
+export interface Words {
   word: string;
-  wordT: string;
+  wordT: string[];
 }

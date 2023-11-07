@@ -3,10 +3,10 @@ import { ITaskUC } from '../task.uc';
 import { ITaskProvider } from 'src/data-provider/task.provider';
 import { CreateTaskDto } from 'src/controller/dto/task/create-task.dto';
 import { UpdateTaskDto } from 'src/controller/dto/task/update-task.dto';
-import { Task } from 'src/core/entity/task';
+import { Task, Words } from 'src/core/entity/task';
 import { IWordList } from 'src/core/shared/logic/wordList';
-import { IGetResponseService } from 'src/core/shared/http/getResponse.service';
 import { ITranslateProvider } from 'src/data-provider/translate.provider';
+import { ResponseTranslate } from 'src/core/shared/entity/wordTranslate.entity';
 
 @Injectable()
 export class TaskUCImpl implements ITaskUC {
@@ -31,30 +31,66 @@ export class TaskUCImpl implements ITaskUC {
     const wordList = this._wordList.extractWordsFromTexts([updateTask.content]);
     //traducir palabras a ingles
 
-    // const translateWords: ResponseTranslate[] = [];
+    const translateWords: ResponseTranslate[] = [];
 
-    for (const word of wordList) {
-      const wordT = await this._translateProvider.getTranslateBydWord(word);
-      if (wordT !== null) {
-      } else {
-      }
+    const listStringNoExist: string[] = [];
 
-      // translateWords.push(wordT);
-    }
-
-    const response = await this._wordList.translateWordsToEnglish(wordList);
-
-    console.log('response', response);
-
-    return response;
-
+    // no existe informacion de la tarea
     if (!nowTask) {
       return {
         success: false,
         message: 'Task not found',
-        data: response,
+        data: null,
       };
     }
+
+    //consulta de palabras
+    for (const word of wordList) {
+      //consulta si ya existe en el diccionario
+      let wordT = await this._translateProvider.getTranslateBydWord(word);
+
+      //si no existe se consulta en la api
+      if (wordT === null) {
+        const response = await this._wordList.translateWordsToEnglish([word]);
+
+        //si existe se guarda en el diccionario
+        if (
+          response !== undefined &&
+          response !== null &&
+          response.length > 0
+        ) {
+          if (
+            response[0] !== null &&
+            response[0].wordT !== undefined &&
+            response[0].wordT.length > 0
+          ) {
+            wordT = await this._translateProvider.saveTranslate(response[0]);
+          } else {
+            listStringNoExist.push(word);
+          }
+        } else {
+          listStringNoExist.push(word);
+        }
+      }
+
+      console.log(listStringNoExist);
+
+      //si existe se agrega a la lista
+      if (wordT !== null) translateWords.push(wordT);
+    }
+
+    const listWord: Words[] = [];
+    //actualizar las traducciones
+    for (const word of translateWords) {
+      const wordNow: Words = {
+        word: word.word,
+        wordT: word.wordT,
+      };
+      listWord.push(wordNow);
+    }
+
+    //actualizar tarea
+    updateTask.words = listWord;
 
     return await this._taskProvider.update(id, updateTask);
   }

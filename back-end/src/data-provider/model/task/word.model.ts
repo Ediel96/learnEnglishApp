@@ -6,5 +6,5 @@ export class WordModel extends Document {
   word: string;
 
   @Prop()
-  wordT: string;
+  wordT: string[];
 }

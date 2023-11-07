@@ -26,6 +26,10 @@ export class WordListImpl implements IWordList {
     for (const word of words) {
       const wordT = await this.getServices.translateToEnglish(word);
       if (wordT !== null) {
+        wordT.typeLanguage =
+          wordT.typeLanguage !== undefined && wordT.typeLanguage !== null
+            ? wordT.typeLanguage
+            : 'en-es';
         wordT.wordT = await this.getServices.getWordTranslate(word);
       }
       translateWords.push(wordT);

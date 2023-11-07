@@ -22,7 +22,7 @@ export class TranslateDictionaryModel extends Document {
   audio: string;
 
   @Prop()
-  definitions?: DefinitionModel[];
+  definitions: DefinitionModel[];
 
   @Prop()
   synonyms: string[];

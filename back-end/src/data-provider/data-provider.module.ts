@@ -10,6 +10,9 @@ import {
 } from './model/translateDictionary/translateDictionary.model';
 import { ITranslateProvider } from './translate.provider';
 import { TranslateProvider } from './provider/translate.provider.impl';
+import { ICategoryProvider } from './category.provider';
+import { CategoryProvider } from './provider/category.provider.impl';
+import { CategoryModel, CategorySchema } from './model/category/category.model';
 
 @Module({
   imports: [
@@ -21,6 +24,11 @@ import { TranslateProvider } from './provider/translate.provider.impl';
     MongooseModule.forFeature([
       { name: TaskModel.name, schema: TaskSchema, collection: 'coll_task' },
       {
+        name: CategoryModel.name,
+        schema: CategorySchema,
+        collection: 'coll_category',
+      },
+      {
         name: TranslateDictionaryModel.name,
         schema: TranslateDictionarySchema,
         collection: 'coll_translate_dictionary',
@@ -30,7 +38,8 @@ import { TranslateProvider } from './provider/translate.provider.impl';
   providers: [
     { provide: ITaskProvider, useClass: TaskProvider },
     { provide: ITranslateProvider, useClass: TranslateProvider },
+    { provide: ICategoryProvider, useClass: CategoryProvider },
   ],
-  exports: [ITaskProvider, ITranslateProvider],
+  exports: [ITaskProvider, ITranslateProvider, ICategoryProvider],
 })
 export class DataProviderModule {}

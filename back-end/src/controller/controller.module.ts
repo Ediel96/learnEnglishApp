@@ -3,16 +3,16 @@ import { TaskController } from './task.controller';
 import { ITaskServices } from './service/task.service';
 import { TaskService } from './service/impl/task.service.impl';
 import { CoreModule } from 'src/core/core.module';
-import { ContentTranslateController } from './contentTranslate.controller';
-import { IContentTranslateService } from './service/contentTranslate.service';
-import { ContentTranslateService } from './service/impl/contentTranslate.service.impl';
+import { CategoryController } from './category.controller';
+import { ICategoryService } from './service/category.service';
+import { CategoryService } from './service/impl/category.service.impl';
 
 @Module({
   imports: [CoreModule],
-  controllers: [TaskController, ContentTranslateController],
+  controllers: [TaskController, CategoryController],
   providers: [
     { provide: ITaskServices, useClass: TaskService },
-    { provide: IContentTranslateService, useClass: ContentTranslateService },
+    { provide: ICategoryService, useClass: CategoryService },
   ],
 })
 export class ControllerModule {}

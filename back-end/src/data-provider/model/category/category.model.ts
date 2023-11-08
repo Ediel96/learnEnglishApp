@@ -10,6 +10,9 @@ export class CategoryModel extends Document {
   userId: string;
 
   @Prop()
+  IdTitle: string;
+
+  @Prop()
   title: string;
 
   @Prop()
